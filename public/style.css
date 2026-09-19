@@ -1,0 +1,212 @@
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e222b;
+  --border: #2a2f3a;
+  --text: #e6e9ef;
+  --muted: #9aa3b2;
+  --accent: #3b82f6;
+  --accent2: #f59e0b;
+  --danger: #ef4444;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* ---------- 顶栏 ---------- */
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+h1 { font-size: 16px; margin: 0; white-space: nowrap; }
+.toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+button {
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--accent); color: #fff; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.sep { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
+#zoomSlider { width: 140px; }
+
+/* ---------- 状态栏 ---------- */
+#status {
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 时间轴 ---------- */
+.timeline-wrap { position: relative; }
+#timelineViewport {
+  height: 200px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #10131a;
+  border-bottom: 1px solid var(--border);
+}
+#timelineContent { position: relative; height: 100%; min-width: 100%; }
+
+#ruler {
+  position: relative;
+  height: 28px;
+  border-bottom: 1px solid var(--border);
+  background: #141822;
+}
+.tick { position: absolute; bottom: 0; width: 1px; height: 8px; background: #4a5262; }
+.tick span {
+  position: absolute;
+  bottom: 10px;
+  left: 3px;
+  font-size: 10px;
+  color: #8b93a3;
+  white-space: nowrap;
+  font-family: var(--mono);
+}
+
+#track { position: relative; height: calc(100% - 28px); }
+
+.cue-block {
+  position: absolute;
+  top: 14px;
+  height: 120px;
+  display: flex;
+  z-index: 2;
+  background: rgba(59, 130, 246, 0.22);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.cue-block.selected {
+  border-color: var(--accent2);
+  background: rgba(245, 158, 11, 0.22);
+  box-shadow: 0 0 0 1px var(--accent2);
+}
+.handle { flex: 0 0 7px; cursor: col-resize; background: rgba(255, 255, 255, 0.08); }
+.handle:hover { background: var(--accent); }
+.cue-block.selected .handle:hover { background: var(--accent2); }
+.body { flex: 1; min-width: 0; cursor: grab; padding: 5px 7px; overflow: hidden; }
+.body:active { cursor: grabbing; }
+.cue-title {
+  font-size: 10px;
+  color: #a9c8ff;
+  white-space: nowrap;
+  font-family: var(--mono);
+  margin-bottom: 2px;
+}
+.cue-block.selected .cue-title { color: #ffd9a0; }
+.cue-text {
+  font-size: 11px;
+  color: #d7dce5;
+  overflow: hidden;
+  white-space: pre-line;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
+/* 后继/前驱安全线（拖动时显示的红色虚线） */
+.safety-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed var(--danger);
+  z-index: 10;
+  pointer-events: none;
+  display: none;
+}
+
+#emptyHint {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--muted);
+  background: rgba(15, 17, 21, 0.75);
+  pointer-events: none;
+  z-index: 20;
+}
+#emptyHint p { margin: 4px 0; }
+#emptyHint .big { font-size: 16px; color: var(--text); }
+
+/* ---------- 字幕列表 ---------- */
+#cueListWrap { flex: 1; overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 5;
+  font-weight: 600;
+  color: var(--muted);
+}
+td.idx, th.idx { width: 44px; color: var(--muted); text-align: right; }
+td.tc { font-family: var(--mono); white-space: nowrap; color: #a9c8ff; }
+tr.selected td { background: rgba(245, 158, 11, 0.1); }
+tbody tr:hover td { background: rgba(255, 255, 255, 0.03); }
+td.txt { width: 50%; }
+td.txt textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font: inherit;
+  resize: none;
+  padding: 0;
+}
+td.txt textarea:focus { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+
+/* ---------- 拖动提示 ---------- */
+#tooltip {
+  position: fixed;
+  z-index: 99;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font: 11px var(--mono);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+#tooltip[hidden] { display: none; }
+
+body.dragging, body.dragging * { user-select: none !important; }

@@ -1,0 +1,17 @@
+{
+  "name": "srt-timeline-editor",
+  "version": "1.0.0",
+  "description": "本地运行的 SRT 字幕时间轴修整 Web 应用（Node.js + Express + 原生前端）",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/engine.test.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

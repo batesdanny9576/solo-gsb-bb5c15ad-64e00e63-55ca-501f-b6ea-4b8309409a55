@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SRT 时间轴修整器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎬 SRT 时间轴修整器</h1>
+    <div class="toolbar">
+      <button id="btnImport" class="primary">导入 SRT</button>
+      <input type="file" id="fileInput" accept=".srt,text/plain" hidden>
+      <button id="btnSample">加载示例</button>
+      <button id="btnUndo" disabled>撤销</button>
+      <button id="btnExport" disabled>导出 SRT</button>
+      <span class="sep"></span>
+      <button id="btnZoomOut" title="缩小时间轴">−</button>
+      <input type="range" id="zoomSlider" min="0" max="1000" value="434">
+      <button id="btnZoomIn" title="放大时间轴">＋</button>
+      <button id="btnZoomFit" title="缩放到完整时长">适配</button>
+    </div>
+  </header>
+
+  <div id="status">正在初始化…</div>
+
+  <div class="timeline-wrap">
+    <div id="timelineViewport">
+      <div id="timelineContent">
+        <div id="ruler"></div>
+        <div id="track">
+          <div class="safety-line" id="safetyA"></div>
+          <div class="safety-line" id="safetyB"></div>
+        </div>
+      </div>
+    </div>
+    <div id="emptyHint">
+      <div>
+        <p class="big">尚未加载字幕</p>
+        <p>点击「导入 SRT」选择文件，或将 .srt 文件拖入页面</p>
+        <p>也可以点击「加载示例」立即体验</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="cueListWrap">
+    <table id="cueList">
+      <thead>
+        <tr>
+          <th class="idx">#</th>
+          <th>开始</th>
+          <th>结束</th>
+          <th>时长</th>
+          <th>文本（可编辑）</th>
+        </tr>
+      </thead>
+      <tbody id="cueBody"></tbody>
+    </table>
+  </div>
+
+  <div id="tooltip" hidden></div>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

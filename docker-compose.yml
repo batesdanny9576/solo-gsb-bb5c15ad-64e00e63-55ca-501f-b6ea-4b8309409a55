@@ -1,0 +1,7 @@
+services:
+  srt-timeline-editor:
+    build: .
+    container_name: srt-timeline-editor
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
